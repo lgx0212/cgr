@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace:项目mapper地址-->
+<mapper namespace="com.cgr.demo.mapper.BabyMapper">
+    <select id="queryBaby" resultType="baby">
+        SELECT * from baby
+    </select>
+    <select id="selectBaby" resultType="baby">
+        SELECT * from baby where user_id=#{userid}
+    </select>
+    <select id="selectBabyItem" resultType="baby">
+        SELECT * from baby where baby_id=#{babyid}
+    </select>
+    <select id="checkedBaby" resultType="baby">
+        SELECT * from baby where user_id=#{userid} and baby_checked = 1
+    </select>
+    <insert id="insertBaby">
+        insert into baby (user_id,baby_name,baby_sex,baby_brith,baby_checked) value
+        (#{userid},#{babyname},#{babysex},#{babybrith},0);
+    </insert>
+    <insert id="insertBabyImg">
+        insert into baby (user_id,baby_name,baby_sex,baby_img,baby_brith,baby_checked) value
+        (#{userid},#{babyname},#{babysex},#{babyimg},#{babybrith},0);
+    </insert>
+
+    <update id="updateBaby">
+        update baby set baby_name=#{babyname},baby_sex = #{babysex},baby_brith=#{babybrith}
+        where baby_id=#{babyid}
+    </update>
+    <update id="updateBabyImg">
+        update baby set baby_img=#{babyimg}
+        where baby_id=#{babyid}
+    </update>
+    <update id="updateBabyBackImg">
+        update baby set baby_backimg=#{babybackimg}
+        where baby_id=#{babyid}
+    </update>
+    <update id="updateBabyName">
+        update baby set baby_name=#{babyname}
+        where baby_id=#{babyid}
+    </update>
+    <update id="defaultBabyChecked">
+        update baby set baby_checked=1 where user_id=#{userid};
+    </update>
+    <update id="updateBabyChecked">
+        update baby set baby_checked=0 where user_id=#{userid};
+        update baby set baby_checked=1 where baby_id=#{babyid};
+    </update>
+    <delete id="deleteBaby">
+        delete from baby where baby_id=#{babyid}
+    </delete>
+
+</mapper>

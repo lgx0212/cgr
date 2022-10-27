@@ -1,0 +1,25 @@
+server:
+    port: 8888
+    servlet:
+        context-path: /cgr
+
+spring:
+    # 配置数据源
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql:///cgr?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false&allowMultiQueries=true
+        username: root
+        password: root
+        # 指定德鲁伊连接池.
+        type: com.alibaba.druid.pool.DruidDataSource
+mybatis:
+    # 扫描映射文件
+    mapper-locations: mapper/*.xml
+    # 配置别名
+    type-aliases-package: com.cgr.demo.bean
+    configuration:
+        # 开启驼峰映射.
+        map-underscore-to-camel-case: true
+
+web:
+    upload-path: D:/image/

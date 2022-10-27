@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace:项目mapper地址-->
+<mapper namespace="com.cgr.demo.mapper.BigNewsMapper">
+    <select id="selectbignew" resultType="bigNews">
+        SELECT * from bignew where bignew_id = #{bignewid}
+    </select>
+    <select id="selectAllbignew" resultType="bigNews">
+        SELECT * from bignew where baby_id = #{babyid}
+    </select>
+    <insert id="insertBigNews">
+        insert into bignew (user_id,baby_id,bignew_content,bignew_date) value
+        (#{userid},#{babyid},#{bignewcontent},#{bignewdate});
+    </insert>
+    <update id="updateBigNews">
+        update bignew set bignew_content=#{bignewcontent},bignew_date = #{bignewdate}
+        where bignew_id=#{bignewid}
+    </update>
+    <delete id="deletebignew">
+        delete from bignew where bignew_id=#{bignewid}
+    </delete>
+</mapper>

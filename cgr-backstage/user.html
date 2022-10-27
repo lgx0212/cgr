@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+		<script src="js/jquery-2.1.0.js" type="text/javascript"></script>
+		<script src="js/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/plugs/jquery-ui.min.js" type="text/javascript"></script>
+		<link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css" />
+		<style>
+			.form-control {
+            display: inline;
+            width: 100%;
+            height: 34px;
+            padding: 6px 12px;
+            font-size: 14px;
+            line-height: 1.42857143;
+            color: #555;
+            background-color: #fff;
+            background-image: none;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+            -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+            -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+            transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        }
+		img{
+			width: 30px;
+			height: 30px;
+		}
+        .form-group img{
+            width: 34px;
+            height: 34px;
+            border: 1px solid #ccc;
+        }
+		.uploadImg{
+		    /*text-align: left;*/
+		  }
+		  .upload-content{
+		    /*margin-left: 0.3rem;*/
+		  }
+		
+		
+		  .img-list{
+		    display: inline-block;
+		    /*margin: 0.6rem 0.3rem 0.3rem 0;*/
+		  }
+		
+		  .uploadSec img{
+		    width: 100%;
+		    height: 100%;
+		  }
+		
+		
+		  .uploadSec{
+		    position: relative;
+		    display: inline-block;
+		    width: 300px;
+		    height: 300px;
+		    overflow: hidden;}
+		  .uploadSec img{
+		    width: 100%;
+		    height: 100%;
+		  }
+		  #file{
+		      position: absolute;
+		      height: 100%;
+		      left: 0;
+		      top: 0;
+		      opacity: 0;
+		    }
+			#id{
+			    display: none;
+			  }
+			  .iframe{
+			      display: none;
+			    }
+    </style>
+	<body>
+		<div class="container-fluid" style="margin-top: 20px;">
+			<div id="" style="text-align: center;">
+				<select id="sel" style="width: 10%; margin-right: 10px;" class="form-control" onchange="tchange()">
+					<option value="0" selected="selected" disabled="disabled">查询类型</option>
+					<option value="1">ID</option>
+					<option value="2">用户名称</option>
+					<option value="3">用户账号</option>
+				</select>
+				<input class="form-control" type="text" style="width: 30%;" id="selp" placeholder="商品查询" />
+				<button class="btn btn-success" type="button" onclick="select()" style="margin-left: 20px;">查询</button>
+			</div>
+			<div id="myTabContent" class="tab-content" style="margin-top: 15px;">
+				<div id="show_content" class="tab-pane fade in active">
+					<div id="dv1">
+						<table class="table table-bordered table-striped table-hover" id="tbRecord">
+							<thead>
+								<tr>
+									<th>用户ID</th>
+									<th>用户名称</th>
+									<th>用户性别</th>
+									<th>用户账号</th>
+									<th>用户密码</th>
+									<th>用户头像</th>
+									<th>用户生日</th>
+									<th>编辑</th>
+									<th>删除</th>
+								</tr>
+							</thead>
+							<tbody id="tb">
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div style="text-align: center;">
+					<div id="page" style="display: initial;">
+					</div>
+					<input class="btn btn-info" type="button" id="up" value="上一页" />
+					<div id="nowpage" style="display: initial;">
+					</div>
+					<input class="btn btn-info" type="button" id="down" value="下一页" />
+					去第<select id="changepage" onchange="changepage()" class="form-control" style="width: 10%;">
+					</select>页
+				</div>
+				<form id="dialog-form" title="编辑">
+					<div class="form-group">
+						<label for="exampleInputEmail1">用户姓名</label>
+						<input type="text" name="username" class="form-control" id="name" placeholder="">
+					</div>
+					<div class="form-group">
+						<label for="jg">用户性别</label>
+						<select name="usersex" id="usersex" class="form-control">
+							<option value="男">男</option>
+							<option value="女">女</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="exampleInputPassword1">账号</label>
+						<input type="text" name="userusername" class="form-control" id="username" placeholder="">
+					</div>
+					<div class="form-group">
+						<label for="exampleInputPassword1">密码</label>
+						<input type="text" name="userpassword" class="form-control" id="userpassword" placeholder="">
+					</div>
+					<div class="form-group">
+						<label for="exampleInputPassword1">用户生日</label>
+						<input type="date" name="userbrith" class="form-control" id="userbrith" placeholder="">
+					</div>
+					<input type="button" class="btn btn-success" onclick="editP()" value="修改"></input>
+				</form>
+				<form id="dialog-form-photo" title="编辑" action="http://localhost:8888/cgr/users/updateimg" method="post" target="frameName"
+				 enctype="multipart/form-data">
+
+					<div class="form-group">
+						<label for="exampleInputPassword1">用户头像</label><br />
+						<div class="uploadImg">
+							<div class="upload-content">
+								<div class="img-list">
+									<div class="uploadSec">
+										<img id="userimg" />
+										<input type="file" name="file" id="file" onchange="showImg(this)">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<input id="id" type="text" name="userid" required="required">
+					<input type="button" class="btn btn-success" onclick="editPho()" value="修改"></input>
+				</form>
+				<iframe class="iframe" src="" frameborder="0" name="frameName"></iframe>
+				<script>
+					var tId1 = 1; //全局  添加商品  类别Id
+					var tId2 = 1; //全局  编辑商品  类别Id
+					var pId; //全局 编辑  拿到需编辑商品Id
+					var selpId = 0; //全局 搜索框默认选择
+					var nowpage = 1; //全局 默认商品显示第一页
+					var page = 0;
+					$(function() { //加载页面显示信息
+
+						$("#down").click(function() { //翻页 下一页
+							if (nowpage < page) {
+								nowpage++
+								$.ajax({
+									url: "http://localhost:8888/cgr/users/allusers",
+									type: "get",
+									datatype: "json",
+									success: function(result) {
+										if (result.ret == 1) {
+											var products = result.data;
+											$("#show_content").tab("show")
+											show(products)
+										}
+									}
+								})
+							}
+							$("#nowpage").text("当前第" + nowpage + "页")
+						})
+						$("#up").click(function() { //翻页 上一页
+							if (nowpage > 1) {
+								nowpage--
+								$.ajax({
+									url: "http://localhost:8888/cgr/users/allusers",
+									type: "get",
+									datatype: "json",
+									success: function(result) {
+										if (result.ret == 1) {
+											var products = result.data;
+											$("#show_content").tab("show")
+											show(products)
+										}
+									}
+								})
+								$("#nowpage").text("当前第" + nowpage + "页")
+							}
+						})
+						$("#dialog-form").dialog({ //初始化隐藏编辑页面
+							autoOpen: false
+						})
+						$("#dialog-form-photo").dialog({ //初始化隐藏编辑页面
+							autoOpen: false
+						})
+						$.ajax({ //初始化显示商品信息，显示分页信息
+							url: "http://localhost:8888/cgr/users/allusers",
+							type: "get",
+							datatype: "json",
+							success: function(result) {
+								if (result.ret == 1) {
+									var products = result.data;
+									$("#show_content").tab("show")
+									show(products)
+									showpage(products)
+								}
+							}
+						})
+						    
+					})
+
+					function showpage(products) { //显示分页信息
+						$("#changepage").html("")
+						var p = " <option value ='0' selected='selected' disabled='disabled'>请选择</option>"
+						$("#changepage").append(p)
+						page = Math.ceil(products.length / 8);
+						$("#page").text("共" + page + "页")
+						// console.log(page)
+						for (var npage = 1; npage <= page; npage++) {
+							var pagestr = "<option value='" + npage + "'>" + npage + "</option>";
+							$("#changepage").append(pagestr)
+						}
+					}
+
+					function show(products) { //显示商品信息
+						var tb = $("#tb")
+						tb.html("")
+						// nowpage = 2
+						for (var index = 0; index < products.length; index++) {
+							if (index >= (nowpage - 1) * 8 && index < nowpage * 8) {
+								var tobj = products[index]
+								var date = new Date(tobj.userbrith).Format("yyyy-MM-dd");
+								let img
+								if(tobj.userimg==null){
+									img='img/my.png'
+								}else{
+									img='http://localhost:8888/cgr'+tobj.userimg
+								}
+								var str = "<tr>" +
+								
+									"<td>" + tobj.userid + "</td>" +
+									"<td>" +'<a href="user-info.html?id='+tobj.userid+'">'+
+										 tobj.username + 
+									'</a>'+"</td>" +
+									"<td>" + tobj.usersex + "</td>" +
+									"<td>" + tobj.userusername + "</td>" +
+									"<td>" + '******' + "</td>" +
+									"<td><img onclick='photo(" + tobj.userid + ")' src=" + img + "></td>" +
+									"<td>" + date + "</td>" +
+									"<td class='edit'><button class='btn btn-warning' onclick='edit(" + tobj.userid + ")'>编辑</button></td>" +
+									"<td class='delete'><button onclick='del(" + tobj.userid + ")'  class='btn btn-danger' >删除</button></td>" +
+									"</tr>";
+								tb.append(str);
+							}
+						}
+						$("#nowpage").text("当前第" + nowpage + "页")
+					}
+
+					function del(pid) { //删除信息方法
+						if (confirm("确认要删除吗？")) {
+							console.log(pid)
+							$.ajax({
+								url: "http://localhost:8888/cgr/users/delete",
+								type: "get",
+								data: "userid=" + pid,
+								datatype: "json",
+								success: function(result) {
+									$.ajax({ //初始化显示商品信息，显示分页信息
+										url: "http://localhost:8888/cgr/users/allusers",
+										type: "get",
+										datatype: "json",
+										success: function(result) {
+											if (result.ret == 1) {
+												var products = result.data;
+												$("#show_content").tab("show")
+												show(products)
+												showpage(products)
+											}
+										}
+									})
+								}
+							})
+						}
+					}
+
+					function edit(pid) { //编辑  拿到商品信息并显示
+						$.ajax({
+							url: "http://localhost:8888/cgr/users/selectusers",
+							type: "get",
+							data: "userid=" + pid,
+							datatype: "json",
+							success: function(result) {
+								var name = result.data[0].username
+								var sex = result.data[0].usersex
+								var username = result.data[0].userusername
+								var password = result.data[0].userpassword
+								let img
+								if(result.data[0].userimg==null){
+									img = 'img/my.png'
+								}else{
+									img = "http://localhost:8888/cgr"+result.data[0].userimg
+								}
+								 
+								var brith = new Date(result.data[0].userbrith).Format("yyyy-MM-dd")
+								$("#name").val(name)
+								$("#usersex").val(sex)
+								$("#username").val(username)
+								$("#userpassword").val(password)
+								$("#userimg").attr("src",img)
+								$("#userbrith").val(brith)
+								pId = result.data[0].userid
+							}
+						})
+						editpro()
+					}
+
+					function editpro() { //点击编辑按钮，显示编辑页面
+						$("#dialog-form").dialog({
+							width: '500px',
+							autoOpen: open
+						})
+					}
+
+					function editpho() { //点击编辑按钮，显示编辑页面
+						$("#dialog-form-photo").dialog({
+							width: '350px',
+							autoOpen: open
+						})
+					}
+
+					function editP() { //编辑  编辑信息
+						var parasm = $("#dialog-form").serialize() + "&userid=" + pId;
+						if (confirm("确定修改吗？")) {
+							$.ajax({
+								url: "http://localhost:8888/cgr/users/adminupdate",
+								type: "get",
+								data: parasm,
+								datatype: "json",
+								success: function(result) {
+									if (result.ret = 1) {
+										$.ajax({ //初始化显示商品信息，显示分页信息
+											url: "http://localhost:8888/cgr/users/allusers",
+											type: "get",
+											datatype: "json",
+											success: function(result) {
+												if (result.ret == 1) {
+													var products = result.data;
+													$("#show_content").tab("show")
+													show(products)
+													showpage(products)
+												}
+											}
+										})
+										close()
+									}
+								}
+							})
+							refresh()
+						}
+					}
+
+					function close() { //关闭编辑页面
+						$("#dialog-form").dialog('close');
+					}
+
+					function closepho() { //关闭编辑页面
+						$("#dialog-form-photo").dialog('close');
+					}
+					function refresh(){
+						$(":input", "#editfm")
+							.not(":button", ":reset", "hidden", "submit")
+							.val("")
+							.removeAttr("checked")
+							.removeAttr("selected");
+					}
+
+					function tchange() { //下拉框操作 改变全局变量
+						tId1 = $("#type1").val()
+						tId2 = $("#type2").val()
+						selpId = $("#sel").val()
+						// console.log(selpId)
+
+					}
+
+					function select() { //查询商品信息
+						var parasm = $("#selp").val()
+						if (selpId == 1) {
+							$.ajax({
+								url: "http://localhost:8888/cgr/users/selectusers",
+								type: "get",
+								data: "userid=" + parasm,
+								datatype: "json",
+								success: function(result) {
+									if (result.ret == 1) {
+										var product = result.data;
+										show(product)
+									} else {
+										alert("查询失败或没有此商品！")
+									}
+								}
+							})
+						} else if (selpId == 2) {
+							$.ajax({
+								url: "http://localhost:8888/cgr/users/selectusersbyname",
+								type: "get",
+								data: "username=" + parasm,
+								datatype: "json",
+								success: function(result) {
+									if (result.ret == 1) {
+										var product = result.data;
+										show(product)
+									} else {
+										alert("查询失败或没有此商品！")
+									}
+								}
+							})
+						} else if (selpId == 3) {
+							$.ajax({
+								url: "http://localhost:8888/cgr/users/selectusersbyusername",
+								type: "get",
+								data: "userusername=" + parasm,
+								datatype: "json",
+								success: function(result) {
+									if (result.ret == 1) {
+										var product = result.data;
+										show(product)
+									} else {
+										alert("查询失败或没有此商品！")
+									}
+								}
+							})
+						} else {
+							alert("请选择查询类型！")
+						}
+					}
+
+					function changepage() { //下拉框  改变页码
+						nowpage = $("#changepage").val()
+						$.ajax({
+							url: "http://localhost:8888/cgr/users/allusers",
+							type: "get",
+							datatype: "json",
+							success: function(result) {
+								if (result.ret == 1) {
+									var products = result.data;
+									$("#show_content").tab("show")
+									show(products)
+								}
+							}
+						})
+						$("#nowpage").text("当前第" + nowpage + "页")
+						console.log($("#changepage").val())
+					}
+
+					function showImg(obj) {
+						var f = $(obj).val();
+						if (f == null || f == undefined || f == '') {
+							document.getElementById('image').src = "";
+							return false;
+						}
+						if (!/\.(?:png|jpg|bmp|gif|PNG|JPG|BMP|GIF)$/.test(f)) {
+							alert("类型必须是图片(.png|jpg|bmp|gif|PNG|JPG|BMP|GIF)");
+							$(obj).val('');
+							return false;
+						}
+						imgdata = new FormData();
+						$.each($(obj)[0].files, function(i, file) {
+							imgdata.append('file', file);
+						});
+						if (!file.files || !file.files[0]) {
+							return;
+						}
+						var f = new FileReader();
+						f.onload = function(ev) {
+							userimg.src = ev.target.result;
+						}
+						f.readAsDataURL(file.files[0]);
+					}
+
+					function photo(id) {
+						$("#id").val(id)
+						$.ajax({
+							url: "http://localhost:8888/cgr/users/selectusers",
+							type: "get",
+							data: "userid=" + id,
+							datatype: "json",
+							success: function(result) {
+								let img
+								if(result.data[0].userimg==null){
+									img='img/my.png'
+								}else{
+									img = "http://localhost:8888/cgr" + result.data[0].userimg
+								}
+								$("#userimg").attr("src", img)
+								pId = result.data[0].userid
+							}
+						})
+						editpho()
+					}
+
+					function editPho() {
+						if (confirm("确定修改吗？")) {
+							$("#dialog-form-photo").submit()
+							setTimeout(function(){
+								$.ajax({ //初始化显示商品信息，显示分页信息
+									url: "http://localhost:8888/cgr/users/allusers",
+									type: "get",
+									datatype: "json",
+									success: function(result) {
+										if (result.ret == 1) {
+											var products = result.data;
+											$("#show_content").tab("show")
+											show(products)
+											showpage(products)
+										}
+									}
+								})
+							},500)
+							
+							closepho()
+						}
+					}
+					Date.prototype.Format = function (fmt) {
+					    var o = {
+					        "M+": this.getMonth() + 1,
+					        "d+": this.getDate(),
+					        "h+": this.getHours(),
+					        "m+": this.getMinutes(),
+					        "s+": this.getSeconds(),
+					        "q+": Math.floor((this.getMonth() + 3) / 3),
+					        "S": this.getMilliseconds()
+					    };
+					    if (/(y+)/.test(fmt))
+					        fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+					    for (var k in o)
+					        if (new RegExp("(" + k + ")").test(fmt))
+					            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+					    return fmt;
+					};
+				</script>
+			</div>
+	</body>
+</html>

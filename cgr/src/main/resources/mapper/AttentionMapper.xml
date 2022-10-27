@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace:项目mapper地址-->
+<mapper namespace="com.cgr.demo.mapper.AttentionMapper">
+
+    <resultMap id="BaseResultMap" type="com.cgr.demo.bean.Attention">
+        <id column="attention_id" property="attentionid"></id>
+        <result column="user_id" property="userid"></result>
+        <result column="attention_user_id" property="attentionuserid"></result>
+        <collection property="users"  ofType="com.cgr.demo.bean.User" column="userid">
+            <id column="user_id" property="userid"></id>
+            <result column="user_name" property="username"></result>
+            <result column="user_img" property="userimg"></result>
+        </collection>
+    </resultMap>
+    <resultMap id="myAttention" type="com.cgr.demo.bean.Attention">
+        <id column="attention_id" property="attentionid"></id>
+        <result column="attention_user_id" property="attentionuserid"></result>
+        <result column="user_id" property="userid"></result>
+        <collection property="users"  ofType="com.cgr.demo.bean.User" column="userid">
+            <id column="user_id" property="userid"></id>
+            <result column="user_name" property="username"></result>
+            <result column="user_img" property="userimg"></result>
+        </collection>
+        <collection property="mynews"  ofType="com.cgr.demo.bean.Mynew" column="mynewid">
+            <id column="mynew_id" property="mynewid"></id>
+            <result column="user_id" property="userid"></result>
+            <result column="baby_id" property="babyid"></result>
+            <result column="mynew_date" property="mynewdate"></result>
+            <result column="mynew_content" property="mynewcontent"></result>
+            <result column="mynew_support" property="mynewsupport"></result>
+            <result column="mynew_collect" property="mynewcollect"></result>
+            <result column="mynew_open" property="mynewopen"></result>
+            <collection property="mynewp"  ofType="com.cgr.demo.bean.Mynew_p" column="mynewpid">
+                <id column="mynew_p_id" property="mynewpid"></id>
+                <result column="mynew_p_img" property="mynewpimg"></result>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="selectIfAttention" resultType="attention">
+        SELECT * from attention where user_id=#{userid} and attention_user_id=#{attentionuserid}
+    </select>
+    <select id="countAttentionMy" resultMap="BaseResultMap" parameterType="Attention">
+        SELECT * FROM attention  LEFT JOIN user on attention.user_id = user.user_id
+        WHERE attention_user_id=#{attentionuserid}
+    </select>
+    <select id="countMyAttention" resultMap="BaseResultMap" parameterType="Attention">
+        SELECT * FROM attention  LEFT JOIN user on attention.attention_user_id = user.user_id
+        WHERE attention.user_id=#{userid}
+    </select>
+    <select id="MyAttentionNews" resultMap="myAttention" parameterType="Attention">
+        SELECT attention.attention_user_id,
+attention.attention_id,
+user.user_id,
+user.user_name,
+user.user_img,
+mynew.user_id,
+mynew.baby_id,
+mynew.mynew_id,
+mynew.mynew_date,
+mynew.mynew_content,
+mynew.mynew_support,
+mynew.mynew_collect,
+mynew.mynew_open,
+mynew_p.mynew_p_img
+
+FROM attention LEFT JOIN user on attention.attention_user_id=user.user_id LEFT JOIN mynew on attention.attention_user_id=mynew.user_id LEFT JOIN mynew_p on mynew.mynew_id=mynew_p.mynew_id
+        WHERE attention.user_id = #{userid} order by mynew.mynew_id desc
+
+    </select>
+    <insert id="insertAttention">
+        insert into attention (user_id,attention_user_id) value
+        (#{userid},#{attentionuserid});
+    </insert>
+    <delete id="deleteAttentionMy">
+        delete from attention where user_id=#{userid} and attention_user_id=#{attentionuserid}
+    </delete>
+
+</mapper>

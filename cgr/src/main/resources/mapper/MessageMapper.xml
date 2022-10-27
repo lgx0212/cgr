@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace:项目mapper地址-->
+<mapper namespace="com.cgr.demo.mapper.MessageMapper">
+    <resultMap id="BaseResultMap" type="com.cgr.demo.bean.Message">
+        <id column="message_num" property="messagenum"></id>
+        <result column="message_sand_user_id" property="messagesanduserid"></result>
+        <result column="message_id" property="messageid"></result>
+        <result column="message_date" property="messagedate"></result>
+        <result column="message_receive_user_id" property="messagereceiveuserid"></result>
+        <collection property="users"  ofType="com.cgr.demo.bean.User" column="userid">
+            <id column="user_id" property="userid"></id>
+            <result column="user_name" property="username"></result>
+            <result column="user_img" property="userimg"></result>
+        </collection>
+        <collection property="message_cs"  ofType="com.cgr.demo.bean.Message_c" column="userid">
+            <id column="message_c_id" property="messagecid"></id>
+            <result column="message_c_sand_user_id" property="messagecsanduserid"></result>
+            <result column="message_c_receive_user_id" property="messagecreceiveuserid"></result>
+            <result column="message_id" property="messageid"></result>
+            <result column="message_c_num" property="messagecnum"></result>
+            <result column="message_content" property="messagecontent"></result>
+            <result column="message_c_date" property="messagecdate"></result>
+            <result column="message_c_state" property="messagecstate"></result>
+        </collection>
+    </resultMap>
+    <resultMap id="ResultMap" type="com.cgr.demo.bean.Message">
+        <id column="message_num" property="messagenum"></id>
+        <result column="message_sand_user_id" property="messagesanduserid"></result>
+        <result column="message_id" property="messageid"></result>
+        <result column="message_receive_user_id" property="messagereceiveuserid"></result>
+        <collection property="message_cs"  ofType="com.cgr.demo.bean.Message_c" column="userid">
+            <id column="message_c_id" property="messagecid"></id>
+            <result column="message_c_sand_user_id" property="messagecsanduserid"></result>
+            <result column="message_c_receive_user_id" property="messagecreceiveuserid"></result>
+            <result column="message_id" property="messageid"></result>
+            <result column="message_c_num" property="messagecnum"></result>
+            <result column="message_content" property="messagecontent"></result>
+            <result column="message_c_date" property="messagecdate"></result>
+            <result column="message_c_state" property="messagecstate"></result>
+            <collection property="users"  ofType="com.cgr.demo.bean.User" column="userid">
+                <id column="user_id" property="userid"></id>
+                <result column="user_name" property="username"></result>
+                <result column="user_img" property="userimg"></result>
+            </collection>
+        </collection>
+    </resultMap>
+    <select id="selectmessage" resultMap="BaseResultMap" parameterType="message" >
+        select * FROM message LEFT JOIN user on message.user_id = user.user_id
+        WHERE message_id = #{messageid}
+    </select>
+    <select id="selectallmessage" resultMap="BaseResultMap" parameterType="message" >
+        SELECT * from message a LEFT JOIN message_c b on a.message_id=b.message_id LEFT JOIN user c on a.user_id=c.user_id
+    </select>
+    <select id="selectbymessageid" resultMap="ResultMap" parameterType="message" >
+        select * FROM message a
+LEFT JOIN message_c b on a.message_id = b.message_id and a.message_num = b.message_c_num
+LEFT JOIN user c on b.message_c_sand_user_id = c.user_id
+WHERE a.message_id = #{messageid} and a.message_sand_user_id=#{messagesanduserid} ORDER BY b.message_c_date
+    </select>
+    <select id="selectMessageNum" resultType="message" >
+        select * FROM message WHERE message_id = #{messageid}
+    </select>
+    <select id="selectmessagebyuserid" resultMap="BaseResultMap" parameterType="message" >
+        select * from message a
+LEFT JOIN user b on a.message_receive_user_id = b.user_id
+LEFT JOIN message_c c on a.message_id = c.message_id and a.message_num = c.message_c_num
+where a.message_sand_user_id =#{messagesanduserid}
+    </select>
+    <select id="selectIfMessage" resultType="message" >
+        select * from message where message_id =#{messageid}
+    </select>
+    <insert id="insertMessage">
+        insert into message(message_sand_user_id,message_id,message_receive_user_id)
+        value (#{messagesanduserid},#{messageid},#{messagereceiveuserid})
+    </insert>
+    <delete id="deleteMessage">
+        delete from message where message_id = #{messageid}
+    </delete>
+
+
+</mapper>

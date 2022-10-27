@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace:项目mapper地址-->
+<mapper namespace="com.cgr.demo.mapper.SupportMapper">
+    <resultMap id="BaseResultMap" type="com.cgr.demo.bean.Support">
+        <id column="support_id" property="supportid"></id>
+        <result column="user_id" property="userid"></result>
+        <result column="mynew_id" property="mynewid"></result>
+        <result column="support_user_id" property="supportuserid"></result>
+        <collection property="users"  ofType="com.cgr.demo.bean.User" column="userid">
+            <id column="user_id" property="userid"></id>
+            <result column="user_name" property="username"></result>
+            <result column="user_img" property="userimg"></result>
+        </collection>
+        <collection property="mynews"  ofType="com.cgr.demo.bean.Mynew" column="mynewid">
+            <id column="mynew_id" property="mynewid"></id>
+            <result column="user_id" property="userid"></result>
+            <result column="baby_id" property="babyid"></result>
+            <result column="mynew_date" property="mynewdate"></result>
+            <result column="mynew_content" property="mynewcontent"></result>
+            <result column="mynew_support" property="mynewsupport"></result>
+            <result column="mynew_collect" property="mynewcollect"></result>
+            <result column="mynew_open" property="mynewopen"></result>
+            <collection property="mynewp"  ofType="com.cgr.demo.bean.Mynew_p" column="mynewpid">
+                <id column="mynew_p_id" property="mynewpid"></id>
+                <result column="mynew_p_img" property="mynewpimg"></result>
+            </collection>
+        </collection>
+    </resultMap>
+    <resultMap id="ResultMap" type="com.cgr.demo.bean.Support">
+    <id column="support_id" property="supportid"></id>
+    <result column="user_id" property="userid"></result>
+    <result column="mynew_id" property="mynewid"></result>
+    <result column="support_user_id" property="supportuserid"></result>
+    <collection property="users"  ofType="com.cgr.demo.bean.User" column="userid">
+        <id column="user_id" property="userid"></id>
+        <result column="user_name" property="username"></result>
+        <result column="user_img" property="userimg"></result>
+    </collection>
+</resultMap>
+
+    <select id="supportMy" resultMap="BaseResultMap" parameterType="Support">
+        SELECT * FROM support a
+LEFT JOIN user b ON a.user_id=b.user_id
+LEFT JOIN mynew c ON a.mynew_id = c.mynew_id
+LEFT JOIN mynew_p d ON a.mynew_id = d.mynew_id
+WHERE a.support_user_id=#{supportuserid}
+    </select>
+    <select id="selectSupportNum" resultMap="ResultMap" parameterType="Support">
+        SELECT * FROM support a LEFT JOIN user b on a.user_id = b.user_id WHERE a.mynew_id=#{mynewid}
+    </select>
+    <select id="selectIfSupport" resultType="support">
+        SELECT * from support where user_id=#{userid} and mynew_id=#{mynewid}
+    </select>
+    <select id="countSupport" resultType="support">
+        SELECT * from support where support_user_id=#{supportuserid}
+    </select>
+    <insert id="insertSupport">
+        insert into support(user_id,mynew_id,support_user_id) value (#{userid},#{mynewid},#{supportuserid})
+    </insert>
+    <delete id="deleteSupport">
+        delete from support where user_id=#{userid} and mynew_id=#{mynewid}
+    </delete>
+
+</mapper>

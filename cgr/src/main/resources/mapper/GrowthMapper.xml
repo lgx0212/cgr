@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace:项目mapper地址-->
+<mapper namespace="com.cgr.demo.mapper.GrowthMapper">
+    <select id="queryGrowth" resultType="growth">
+        SELECT * from growth where baby_id = #{babyid}
+    </select>
+    <select id="selectGrowth" resultType="growth">
+        SELECT * from growth where growth_id = #{growthid}
+    </select>
+    <select id="selectGrowthEchart" resultType="growth">
+        SELECT * from growth where baby_id = #{babyid} order by growth_date
+    </select>
+    <insert id="insertGrowth">
+        insert into growth (user_id,baby_id,growth_height,growth_weight,growth_date) value
+        (#{userid},#{babyid},#{growthheight},#{growthweight},#{growthdate});
+    </insert>
+    <update id="updateGrowth">
+        update growth set growth_height=#{growthheight},
+        growth_weight = #{growthweight},
+        growth_date = #{growthdate}
+        where growth_id=#{growthid}
+    </update>
+    <delete id="deleteGrowth">
+        delete from growth where growth_id=#{growthid}
+    </delete>
+
+</mapper>

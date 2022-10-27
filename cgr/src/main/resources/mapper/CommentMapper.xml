@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace:项目mapper地址-->
+<mapper namespace="com.cgr.demo.mapper.CommentMapper">
+    <resultMap id="BaseResultMap" type="com.cgr.demo.bean.Comment">
+        <id column="comment_id" property="commentid"></id>
+        <result column="mynew_id" property="mynewid"></result>
+        <result column="comment_user_id" property="commentuserid"></result>
+        <result column="comment_content" property="commentcontent"></result>
+        <result column="comment_date" property="commentdate"></result>
+        <collection property="comment_replies"  ofType="com.cgr.demo.bean.Comment_reply">
+            <id column="comment_reply_id" property="commentreplyid"></id>
+            <result column="comment_reply_comment_id" property="commentreplycommentid"></result>
+            <result column="comment_reply_sanduser_id" property="commentreplysanduserid"></result>
+            <result column="comment_reply_receiveuser_id" property="commentreplyreceiveuserid"></result>
+            <result column="comment_reply_content" property="commentreplycontent"></result>
+            <result column="comment_reply_date" property="commentreplydate"></result>
+            <collection property="users1"  ofType="com.cgr.demo.bean.User" column="userid">
+                <id column="did" property="userid"></id>
+                <result column="dname" property="username"></result>
+                <result column="dimg" property="userimg"></result>
+            </collection>
+            <collection property="users2"  ofType="com.cgr.demo.bean.User" column="userid">
+                <id column="eid" property="userid"></id>
+                <result column="ename" property="username"></result>
+                <result column="eimg" property="userimg"></result>
+            </collection>
+
+        </collection>
+        <collection property="users"  ofType="com.cgr.demo.bean.User" column="userid">
+            <id column="user_id" property="userid"></id>
+            <result column="user_name" property="username"></result>
+            <result column="user_img" property="userimg"></result>
+        </collection>
+    </resultMap>
+
+    <select id="selectComment" resultMap="BaseResultMap" parameterType="comment">
+        SELECT a.comment_id,a.comment_content,a.comment_date,
+c.comment_reply_id,c.comment_reply_content,c.comment_reply_date,c.comment_reply_sanduser_id,
+d.user_id did,d.user_img dimg,d.user_name dname,
+e.user_id eid,e.user_img eimg,e.user_name ename,
+b.user_id,b.user_name,b.user_img
+from comment a
+        left join comment_reply c on a.comment_id = c.comment_reply_comment_id
+        left join user d on d.user_id = c.comment_reply_sanduser_id
+        left join user e on e.user_id = c.comment_reply_receiveuser_id
+        LEFT JOIN user b on a.comment_user_id = b.user_id
+where a.mynew_id = #{mynewid} ORDER BY comment_reply_date is null,comment_reply_date
+    </select>
+    <insert id="insertComment" >
+        insert into comment(mynew_id,comment_user_id,comment_content,comment_date)
+        value (#{mynewid},#{commentuserid},#{commentcontent},#{commentdate})
+    </insert>
+    <delete id="deleteComment">
+        delete from comment where comment_id = #{commentid}
+    </delete>
+
+</mapper>

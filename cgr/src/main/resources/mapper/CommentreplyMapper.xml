@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace:项目mapper地址-->
+<mapper namespace="com.cgr.demo.mapper.CommentreplyMapper">
+    <select id="selectadmin" resultType="comment_reply">
+        SELECT * from comment_reply where comment_reply_comment_id=#{commentreplycommentid}
+    </select>
+    <insert id="insertReply">
+        insert into comment_reply(comment_reply_comment_id,comment_reply_sanduser_id,comment_reply_receiveuser_id,comment_reply_content,comment_reply_date)
+        value (#{commentreplycommentid},#{commentreplysanduserid},#{commentreplyreceiveuserid},#{commentreplycontent},#{commentreplydate})
+    </insert>
+    <delete id="delReply">
+        delete from  comment_reply where comment_reply_id = #{commentreplyid}
+    </delete>
+</mapper>

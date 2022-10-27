@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace:项目mapper地址-->
+<mapper namespace="com.cgr.demo.mapper.MessagecMapper">
+    <insert id="insertMessageContent">
+        insert into message_c(message_c_sand_user_id,message_c_receive_user_id,message_id,message_content,message_c_date,message_c_num,message_c_state)
+        value (#{messagecsanduserid},#{messagecreceiveuserid},#{messageid},#{messagecontent},#{messagecdate},#{messagecnum},#{messagecstate})
+    </insert>
+    <update id="updateState">
+        update message_c set message_c_state=1
+        where message_c_num = #{messagecnum}
+    </update>
+    <delete id="deleteMessageC">
+        delete from message_c where message_c_id = #{messagecid}
+    </delete>
+    <delete id="deleteMessageCbyid">
+        delete from message_c where message_id = #{messageid}
+    </delete>
+    <delete id="deleteMessageCbynum">
+        delete from message_c where message_c_num = #{messagecnum}
+    </delete>
+    <delete id="deleteMessageCbyContentid">
+        delete from message_c where message_c_id = #{messagecid}
+    </delete>
+
+
+</mapper>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace:项目mapper地址-->
+<mapper namespace="com.cgr.demo.mapper.CollectMapper">
+    <resultMap id="BaseResultMap" type="com.cgr.demo.bean.Collect">
+        <id column="collection_id" property="collectionid"></id>
+        <result column="user_id" property="userid"></result>
+        <result column="mynew_id" property="mynewid"></result>
+        <result column="collection_user_id" property="collectionuserid"></result>
+        <collection property="mynews"  ofType="com.cgr.demo.bean.Mynew" column="mynewid">
+            <id column="mynew_id" property="mynewid"></id>
+            <result column="user_id" property="userid"></result>
+            <result column="baby_id" property="babyid"></result>
+            <result column="mynew_date" property="mynewdate"></result>
+            <result column="mynew_content" property="mynewcontent"></result>
+            <result column="mynew_support" property="mynewsupport"></result>
+            <result column="mynew_collect" property="mynewcollect"></result>
+            <result column="mynew_open" property="mynewopen"></result>
+            <collection property="mynewp"  ofType="com.cgr.demo.bean.Mynew_p" column="mynewpid">
+                <id column="mynew_p_id" property="mynewpid"></id>
+                <result column="mynew_p_img" property="mynewpimg"></result>
+            </collection>
+        </collection>
+    </resultMap>
+    <resultMap id="ResultMap" type="com.cgr.demo.bean.Collect">
+    <id column="collection_id" property="collectionid"></id>
+    <result column="user_id" property="userid"></result>
+    <result column="mynew_id" property="mynewid"></result>
+    <result column="collection_user_id" property="collectionuserid"></result>
+        <collection property="users"  ofType="com.cgr.demo.bean.User" column="userid">
+            <id column="user_id" property="userid"></id>
+            <result column="user_name" property="username"></result>
+            <result column="user_img" property="userimg"></result>
+        </collection>
+</resultMap>
+
+    <select id="MyCollect" resultMap="BaseResultMap" parameterType="Collect">
+        select * from  collection a LEFT JOIN mynew b on a.mynew_id = b.mynew_id LEFT JOIN mynew_p c on a.mynew_id=c.mynew_id
+        where a.user_id = #{userid}
+    </select>
+    <select id="selectIfCollect" resultType="collect">
+        select * from  collection where user_id = #{userid} and mynew_id = #{mynewid}
+    </select>
+    <select id="selectCollectNum" resultMap="ResultMap" parameterType="Collect">
+        SELECT * FROM collection a LEFT JOIN user b on a.user_id = b.user_id WHERE a.mynew_id=#{mynewid}
+    </select>
+    <insert id="insertCollect" >
+        insert into collection(user_id,mynew_id,collection_user_id)
+        value (#{userid},#{mynewid},#{collectionuserid})
+    </insert>
+    <delete id="deleteCollect">
+        delete from collection where user_id = #{userid} and mynew_id = #{mynewid}
+    </delete>
+
+</mapper>

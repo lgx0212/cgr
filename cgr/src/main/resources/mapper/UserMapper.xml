@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace:项目mapper地址-->
+<mapper namespace="com.cgr.demo.mapper.UserMapper">
+    <select id="User" resultType="user">
+        select * from user
+    </select>
+    <select id="queryUser" resultType="user">
+        SELECT user_id,user_name,user_sex,user_username,user_password,user_img,user_brith,user_myspaceimg from user
+        where user_username = #{userusername} and user_password = #{userpassword}
+    </select>
+    <select id="selectUser" resultType="user">
+        SELECT user_id,user_name,user_sex,user_username,user_password,user_img,user_brith,user_myspaceimg from user
+        where user_id = #{userid}
+    </select>
+    <select id="adminSelectUserByName" resultType="user">
+        SELECT user_id,user_name,user_sex,user_username,user_password,user_img,user_brith,user_myspaceimg from user
+        where user_name like '%${username}%'
+    </select>
+    <select id="adminSelectUserByUsername" resultType="user">
+        SELECT user_id,user_name,user_sex,user_username,user_password,user_img,user_brith,user_myspaceimg from user
+        where user_username like '%${userusername}%'
+    </select>
+    <select id="ifUser" resultType="user">
+        SELECT user_id,user_name,user_sex,user_username,user_password,user_img,user_brith from user
+        where user_username = #{userusername}
+    </select>
+    <insert id="insertUser">
+        insert into user (user_name,user_sex,user_username,user_password,user_brith) value
+        (#{username},#{usersex},#{userusername},#{userpassword},#{userbrith});
+    </insert>
+    <update id="updateUser">
+        update user set user_name=#{username},user_sex = #{usersex},user_brith=#{userbrith}
+        where user_id=#{userid}
+    </update>
+    <update id="adminUpdateUser">
+        update user set user_name=#{username},user_sex = #{usersex},user_username=#{userusername},user_password=#{userpassword},user_brith=#{userbrith}
+        where user_id=#{userid}
+    </update>
+    <update id="updateUserImg">
+        update user set user_img=#{userimg}
+        where user_id=#{userid}
+    </update>
+    <delete id="deleteUser">
+        delete from user where user_id=#{userid}
+    </delete>
+    <update id="updateUserPassword">
+        update user set user_password=#{userpassword}
+        where user_id=#{userid}
+    </update>
+</mapper>

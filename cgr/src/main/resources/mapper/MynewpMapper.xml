@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace:项目mapper地址-->
+<mapper namespace="com.cgr.demo.mapper.MynewpMapper">
+    <resultMap id="getMynewp" type="mynew_p">
+        <id property="mynewpid" column="mynew_p_id"></id>
+        <result property="mynewpimg" column="mynew_p_img"></result>
+    </resultMap>
+
+    <select id="selectMynewp" resultType="mynew_p">
+        SELECT * from mynew_p where mynew_id=#{mynewid}
+    </select>
+    <select id="selectBabyMynewp" resultType="mynew_p" resultMap="getMynewp">
+        SELECT * from mynew_p where mynew_id=#{mynewid}
+    </select>
+    <select id="selectMynewpById" resultType="mynew_p">
+        SELECT * from mynew_p where baby_id=#{babyid} order by mynew_p_id desc
+    </select>
+    <insert id="insertMynew_p">
+        insert into mynew_p (user_id,baby_id,mynew_id,mynew_p_img) value
+        (#{userid},#{babyid},#{mynewid},#{mynewpimg});
+    </insert>
+    <delete id="deleteMynewP">
+        delete from mynew_p where mynew_id=#{mynewid}
+    </delete>
+
+
+</mapper>
